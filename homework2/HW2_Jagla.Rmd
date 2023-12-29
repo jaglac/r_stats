@@ -1,0 +1,137 @@
+---
+title: "Homework 2"
+author: "Caitlin Jagla"
+date: "03/08/2022"
+output: pdf_document
+---
+
+# Set-up
+
+Load the tidyverse library and the 3 datasets regarding dog breeds.
+
+```{r, message=FALSE,warning=FALSE, results='hide'}
+
+library(tidyverse)
+
+breed_rank <- read_csv("breed_rank.csv")
+breed_traits <- read_csv("breed_traits.csv")
+trait_desc <- read_csv("trait_description.csv")
+
+```
+
+Use 2 functions of your choice to investigate the datasets so you know what we are working with.
+
+```{r}
+
+breed_rank |> dim_desc()
+breed_traits |> dim_desc()
+trait_desc |> dim_desc()
+
+breed_rank |> head()
+breed_traits |> head()
+trait_desc |> head()
+```
+
+
+# 1. New variable
+
+Let's say we would like to know which dog breeds increased most in rank from 2013 to 2020.
+
+### A. Create a new variable called `diff_rank` that is the difference in rank between 2013 and 2020. 
+
+```{r}
+breed_rank <- breed_rank |> mutate(diff_rank = `2020 Rank` - `2013 Rank`)
+```
+
+### B. Show the 10 breeds that gained the most interest from 2013 to 2020.
+
+```{r}
+breed_rank |> 
+  arrange(desc(diff_rank)) |> 
+  head(n=10) |> 
+  select(Breed, `2013 Rank`, `2020 Rank`, diff_rank)
+
+```
+
+
+
+
+# 2. Reshape to long form
+
+Begin with the breed_rank dataset and create a long-form dataset where the numeric year is in one column and the numeric rank is in another column. Save only the Breed, year, rank, and diff_rank columns. Save the result into `breed_rank_long` and show it in the report. `breed_rank_long` should have dimensions 1560 x 4.
+
+```{r, warning=FALSE}
+breed_rank_long <-  breed_rank |> 
+    pivot_longer(cols = `2013 Rank`:`2020 Rank`, 
+                 names_to = "year", values_to = "rank") |>
+    separate(col = "year", into = "year", sep = " ") |>
+    select(Breed, year, rank, diff_rank)
+
+dim(breed_rank_long)
+```
+
+
+
+# 3. Plot
+
+Use a line graph to see the rank of each breed over time for the 5 breeds that gained the most popularity from 2013 to 2020.
+
+
+```{r}
+
+top_diff <- breed_rank |> 
+            arrange(desc(diff_rank)) |> 
+            head() |> 
+            pull(Breed)
+            
+
+
+breed_rank_long |>
+  filter(Breed %in% top_diff) |>
+  ggplot(aes(color = Breed, x = year, y = rank)) +
+  geom_line(aes(group = Breed)) +
+  labs(title = "Top Popularity-Gaining Dog Breeds")
+
+```
+
+
+
+
+# 4. Merge
+
+### A. Start with the `breed_rank_long` dataset and create a new dataset that preserves only rows for 2013 and 2020. Call this new dataset `dogs`. Show `dogs` in the report.
+
+
+```{r}
+dogs <- breed_rank_long |>
+  filter(year == c(2013, 2020))
+
+dogs |> head()
+```
+
+
+
+
+### B. Use a `left_join()` with `dogs` on the left and `breed_traits` on the right. Save the resulting dataset into `dogs` and show it in the report.
+
+```{r}
+dogs <- left_join(dogs, breed_traits)
+
+head(dogs)
+```
+
+
+
+### C. Now that rank and breed traits are in the same dataset, create a plot of your choice to show the relationship between `Barking Level` and 2020 ranking. Write a sentence to interprete your plot. Remember that high rank = more popular.
+
+
+```{r}
+dogs |> filter(year == 2020 & `Barking Level`!=0) |> mutate_at("Barking Level", factor) |>
+  ggplot() + 
+  geom_boxplot(aes(fill = `Barking Level`, x = `Barking Level`, y = rank)) +
+  labs(title = "Effect of Barking Level on Breed Popularity in 2020")
+```
+
+
+There does not appear to be any relationship between barking level and breed popularity in 2020.
+

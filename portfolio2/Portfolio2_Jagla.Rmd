@@ -1,0 +1,191 @@
+---
+title: "R Portfolio 2"
+author: "Caitlin Jagla"
+date: "3/25/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+library(tidyverse)
+library(ggrepel)
+library(ggpubr)
+```
+
+
+# 1. Preliminary Data Wrangling
+
+```{r, message=FALSE, warning=FALSE}
+# load data
+df <- read_csv("nurses.csv") %>% as_tibble()
+
+# preview dataset
+glimpse(df)
+```
+
+
+There are no duplicated rows in this dataset: `r df %>% distinct() %>% nrow()` rows out of `r nrow(df)` are distinct.
+
+
+The column/variable names are untidy so I built a description key table and replaced with names that are more R compatible. 
+
+```{r}
+# build variable description key table to generate tidy column names
+desc <- tibble(desc = colnames(df)) %>%
+          mutate(new_name = desc %>% 
+                            tolower() %>% 
+                            str_replace_all(c(" percentile" = "",
+                                              "hourly" = "hrly",
+                                              "annual" = "ann",
+                                              "standard error" = "se",
+                                              "aggregate" = "agg",
+                                              "national" = "natl",
+                                              "employed" = "empl",
+                                              " (%)" = "",
+                                              "[,(%)]"= "",
+                                              "[/]" = "_" ))  %>% 
+                            str_trim() %>%
+                            str_replace_all(., "[ ]", "_"))
+
+# rename columns with tidy names
+df <- df %>% set_names(desc$new_name)
+
+# view description key table
+desc
+```
+
+The dataset contains `NA` values (`anyNA(df) = ``r anyNA(df)`), so I checked to see how many are in each column. Since every column but `location_quotient` has less than 10 `NA`s, I filtered the dataset to exclude rows that contain `NA` in any column *except* `location_quotient`. 
+
+```{r}
+# count number of NAs in each column
+df %>%
+  select_if(~any(is.na(.))) %>%
+  summarise_all(~(sum(is.na(.)))) %>%
+  t() 
+
+# drop rows with NA in any column except location_quotient
+df <- df %>% drop_na(!location_quotient)
+
+# count rows of filtered dataset
+nrow(df)
+```
+
+# 2) Analysis
+
+## Research Question: what is the relationship between change in total RN employment and change in RN salaries?
+
+First I checked to see if all states/territories have data starting at the same year. Unfortunately, two territories (Guam and the Virgin Islands) didn't start reporting until later than the rest. Therefore, they were filtered out of the dataset. I also removed Puerto Rico as it was the only other territory in the dataset. This leaves the 50 states and Washington DC for analysis.
+
+
+```{r analysis1}
+# check to see if data starts with the same year for all states/territories
+df %>% 
+  group_by(state) %>% 
+  summarize(first = min(year), # find first year reported for each state/territory
+            last = max(year)) %>% # find last year reported for each state/territory
+  distinct(first, last) # find all distinct combinations of first & last year reported
+
+
+# check to see which states/territories did not start reporting in 1998
+df %>% 
+  group_by(state) %>% 
+  summarize(first = min(year), # find first year reported for each state
+            last = max(year)) %>% # find last year reported for each state
+  filter(first != 1998) # show only those that did not start with 1998
+
+# remove the territories from the dataset
+df <- df %>% filter(state != "Guam" & state != "Virgin Islands" & state != "Puerto Rico")
+```
+
+Second, I calculated the percent difference in `total RNs employed` and `median annual salary` between 1998 and 2020 for each state:
+
+> $100 * \frac{2020_{median} - 1998_{median}}{1998_{median}}$
+
+This should allow me to compare the *change in salary* between states with less confounding by the differences in salary magnitude between states.  
+
+
+```{r analysis2}
+# calculate percent differences and store in a new tibble
+diff <- df %>% 
+  group_by(state) %>%
+  filter(year == 1998|year==2020) %>% 
+  pivot_wider(names_from = year, # rearrange
+              values_from = c(ann_salary_median, total_empl_rn),
+              id_cols = state) %>%
+  mutate(
+    # calculate percent difference in RNs employed
+      empl_diff = 100 * (total_empl_rn_2020 - total_empl_rn_1998)/
+                         total_empl_rn_1998, 
+    # calculate percent difference in salary
+      salary_diff = 100 * (ann_salary_median_2020 - ann_salary_median_1998)/
+                           ann_salary_median_1998) %>% 
+  as_tibble() %>%
+  arrange(desc(empl_diff)) %>% # rank by percent difference in RN employment
+  rowid_to_column(var = "empl_diff_rank") %>%
+  arrange(desc(salary_diff)) %>% # rank by percent difference in salary
+  rowid_to_column(var = "salary_diff_rank")
+
+
+# display top & bottom ranked states for each calculated metric
+
+#show 5 biggest increases in median annual salary 
+diff %>% 
+  select(state, salary_diff, salary_diff_rank, empl_diff, empl_diff_rank) %>% 
+  slice_max(order_by = salary_diff, n=5) 
+#show 5 smallest increases in median annual salary
+diff %>% 
+  select(state, salary_diff, salary_diff_rank, empl_diff, empl_diff_rank) %>% 
+  slice_min(order_by = salary_diff, n=5)  
+
+#show 5 biggest increases in median annual salary 
+diff %>% 
+  select(state, salary_diff, salary_diff_rank, empl_diff, empl_diff_rank) %>% 
+  slice_max(order_by = empl_diff, n=5) 
+ #show 5 smallest increases in median annual salary
+diff %>% 
+  select(state, salary_diff, salary_diff_rank, empl_diff, empl_diff_rank) %>% 
+  slice_min(order_by = empl_diff, n=5) 
+
+```
+
+To visualize the relevant data to answer this research question, I plotted the percent differences in total RN employment and median annual salary against each other. A linear regression and Pearson's correlation test help to mathematically determine if the two metrics are linked. **Based on these results, it does not appear that changes in RN salaries are associated with changes in RN employment levels.**
+
+```{r, warning=FALSE, message=FALSE}
+# plot percent differences in employment vs salary 
+diff %>% 
+  ggplot(aes(x = empl_diff, y = salary_diff)) +
+  geom_point(aes(color = state), show.legend = FALSE) +
+  geom_smooth(method = lm, # linear regression
+              color = "black",
+              show.legend = FALSE) +
+  geom_label_repel(aes(label = state), # label some outlier points
+            min.segment.length = 0,
+            max.overlaps = 3) +
+  stat_cor(method = "pearson") + # annotate with correlation analysis statistics
+  labs(title = "RN employment level vs. RN salary (change between 1998 & 2020)", 
+       subtitle = "Pearson's correlation analysis",
+       x = "Change in RN median annual salary 1998-2020 (% difference)",
+       y = "Change in RN employment 1998-2020 (% difference)") +
+  theme_classic()
+```
+
+
+These data can be plotted in a slightly different way, using the rank order of the changes in employment level and salary. In this case, I used Spearman's correlation analysis because the data in this plot are on an ordinal scale, not an interval scale. I think this is a good "sanity check" to help validate that the results of the original analysis make sense and that nothing went wrong on a technical level. 
+
+```{r, warning=FALSE, message=FALSE}
+# plot rank of percent differences in employment vs salary 
+
+diff %>% 
+  ggplot(aes(x = empl_diff_rank, y = salary_diff_rank)) +
+  geom_point(aes(color = state), show.legend = FALSE) +
+  geom_smooth(method = lm, # plot linear regression line
+              color = "black",
+              show.legend = FALSE) +
+  stat_cor(method = "spearman") + # annotate with correlation analysis statistics
+  labs(title = "RN employment level vs. RN salary (rank of change)", 
+       subtitle = "Spearman's correlation analysis",
+       x = "Rank of change in RN median annual salary 1998-2020 (% difference)",
+       y = "Rank of change in RN employment 1998-2020 (% difference)") +
+  theme_classic()
+```
+
+

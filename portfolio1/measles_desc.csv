@@ -1,0 +1,14 @@
+variable,description
+index,index ID
+state,school state
+year,academic year
+name,school name
+type,"school type (public, private, or charter)"
+city,city
+county,county
+enroll,number of students enrolled
+mmr,"MMR (measles, mumps, rubella) vaccination rate"
+overall,overall vaccination rate
+xrel,percent of students exempt from vaccination for religious reasons
+xmed,percent of students exempt from vaccination for medical reasons
+xper,percent of students exempt from vaccination for personal reasons

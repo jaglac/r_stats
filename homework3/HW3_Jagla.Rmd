@@ -1,0 +1,151 @@
+---
+title: "Homework 3"
+author: "Caitlin Jagla"
+date: "03/25/2022"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+
+```{r, echo=FALSE, message=FALSE}
+library(tidyverse)
+library(infer)
+```
+
+# 1. Confidence Intervals 
+
+In a group of 20 people, cholesterol was measured first in 1952 and again 10 years later in 1962 (in mg/dl) after enrolling in a long-term health program. (Data loosely based on Dixon WJ and Massey F Jr., Introduction to Statistical Analysis, Fourth Edition, McGraw Hill Book Company, 1983)
+
+```{r}
+# code provided
+fifties <- c(207, 233, 260, 214, 265, 
+             272, 284, 255, 290, 298, 
+             321, 300, 272, 305, 322, 
+             317, 348, 354, 386, 520)
+sixties <- c(209, 239, 258, 202, 261, 
+             270, 274, 254, 293, 299, 
+             319, 299, 281, 288, 325, 
+             303, 339, 338, 385, 525)
+
+chol <- tibble(fifties, sixties, diff = sixties-fifties)
+glimpse(chol)
+```
+
+### 1A. Calculate a 80% confidence interval for the difference in cholesterol over time.
+
+```{r}
+
+chol.t <- broom::tidy(t.test(chol$diff, conf.level = 0.80))
+
+chol.t$conf.low
+chol.t$conf.high
+```
+
+### 1B. Provide an interpretation of what the confidence interval you found in 1A means in terms of cholesterol values
+
+
+>We can be 80% confident that the limits of the CI (`r chol.t$conf.low`, `r chol.t$conf.high`) contain the true mean difference in cholesterol.
+
+
+### 1C. Calculate a 95% CI for the difference in cholesterol
+
+```{r}
+chol.t95 <- broom::tidy(t.test(chol$diff, conf.level = 0.95))
+
+chol.t95$conf.low
+chol.t95$conf.high
+```
+
+### 1D. What happened as we went from a 80% CI to a 95% CI. Why did this occur?
+
+>The confidence interval widened from (`r chol.t$conf.low`, `r chol.t$conf.high`) to (`r chol.t95$conf.low`, `r chol.t95$conf.high`). This happened because increasing the confidence (from 80% to 95%) absent any other changes in the input data (i.e., increased n) inherently requires the range of the interval to increase too. 
+
+
+
+### 1E. Does either interval (in 1A or 1C) include 0? Why is the inclusion of a zero important?
+
+>The 80% CI does not include 0, but the 95% CI does. This is important because inclusion of a zero in the confidence interval implies that there is a chance that the mean difference in cholesterol levels is 0. 
+
+\pagebreak
+# 2. Consider the results of question 1C. Notice that around a quarter of the difference data fit within the 95% confidence interval.
+
+### 2A. Is this usually the case? What happens to the confidence interval as sample size increases?
+
+>There is an inverse square root relationship between confidence intervals and sample sizes.
+
+
+### 2B. To help you answer 2A, use the code provided below to increase the sample size to 2000. Re-calculate the 95% confidence interval.
+
+```{r}
+# code provided
+set.seed(8380)
+chol2000 <- chol |> 
+  select(diff) |>
+  rep_sample_n(size = 2000, replace = TRUE, reps = 1)
+```
+
+```{r}
+chol2000.t <- broom::tidy(t.test(chol2000$diff, conf.level = 0.95))
+chol2000.t$conf.low
+chol2000.t$conf.high
+```
+
+### 2C.To help you answer 2A, use dplyr functions to figure out how many datapoints from chol2000 are in the new 95% CI.
+```{r}
+# nothing shows up but this code should work?
+chol2000 |> filter(between(diff, chol2000.t$conf.low, chol2000.t$conf.high)) |> nrow()
+
+# replaced referenced variables with specific numeric values 
+# to test if formatting issues were causing the failure
+chol2000 |> filter(between(diff, -3.279896, -2.638104)) |> nrow()
+
+# it turns out there are actually no datapoints in the provided dataset
+# which equal the only integer found in the 95% CI range (-3)
+# this is why the filtering code doesn't return any results
+chol2000 |> filter(diff == -3) |> nrow()
+
+
+# code would work if the 95% CI range was different
+# demonstrated by using the 95% CI from the original n=20 dataset
+chol2000 |> filter(between(diff, -6.611832, 0.4118319)) |> nrow()
+
+# code works using referenced variables rather than actual numeric values
+chol2000 |> filter(between(diff, chol.t95$conf.low, chol.t95$conf.high)) |> nrow()
+```
+
+\pagebreak
+For questions 3 and 4, you do not need to run any R code. Please place your answers in the prose portion of the markdown file.
+
+# 3. Let's examine the relationship between CIs and hypothesis tests.
+
+### 3A.	
+You calculate a 95% confidence interval for $\mu_1 - \mu_2$ and come up with (-3, 1). If you test $H_0:\mu_1 - \mu_2 = 0$ and use alpha = .05, will you reject $H_0$? Why or why not?
+
+>In this case, you will not reject $H_0$, because 0 is within the 95% confidence interval.
+
+### 3B.	
+Now you calculate a 99% CI for $\mu_1 - \mu_2$ and come up with (-5, -2). If you test $H_0:\mu_1 - \mu_2 = 0$ and use alpha = .05, will you reject $H_0$? Why or why not?
+
+>In this case, you will reject $H_0$, because 0 is outside the 95% confidence interval.
+
+
+### 3C.
+Finally, you calculate a 95% CI for $\mu_1 - \mu_2$ and come up with (-24, -14). If you test $H_0:\mu_1 - \mu_2 = -12$ and use alpha = .01, will you reject $H_0$? Why or why not?
+
+>It is not possible to answer this because we have not determined a 99% CI. Since -12 lies outside the 95% CI, we can't say if it will be within a 99% CI and therefore can't say if $H_0:\mu_1 - \mu_2 = -12$ will be rejected with alpha = 0.01 or not.
+
+\pagebreak
+# 4. 
+Suppose you test a new medication ($H_0$: new drug does not work, $H_1$: new drug works)
+
+### 4A. 
+Let’s say you reject the null hypothesis (you conclude the drug works). What kind of error could you have made?
+
+>If you reject the null hypothesis, you could make a Type I error (a false positive) in a situation where the drug actually does not work. 
+
+
+### 4B. 
+What if you had concluded that the drug does not work (you fail to reject the null hypothesis). What kind of error could you have made?
+
+>If you fail to reject the null hypothesis, you could make a Type II error (a false negative) in a situation where the drug actually does work. 

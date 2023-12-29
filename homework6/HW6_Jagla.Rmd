@@ -1,0 +1,187 @@
+---
+title: "Homework 6"
+author: "Caitlin Jagla"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+# Problem 1 -- Music Genres
+
+For this homework we are going to see what type of music people seem to be listening to the most on Spotify. The observations for this dataset are at the track level, with each track belonging to a genre of music.  
+
+### A. Understand the dataset
+
+Load in the `spotify.csv` file and use a function to investigate the dataset. 
+
+```{r}
+library(tidyverse)
+
+
+df <- read_csv("spotify.csv")
+glimpse(df)
+
+```
+
+### B. Investigate the genre of each playlist. How many observations are there in each different playlist?
+
+```{r}
+df %>% group_by(playlist_genre) %>% summarise(n = n())
+```
+
+### C. Let's say we are interested in whether the proportion of observations for each genre was equal. State your statistical hypotheses and alpha.
+
+* $H_0$: Pr(latin) = Pr(pop) = Pr(r&b) = Pr(rap) = Pr(rock) = 1/5 = 0.2
+  * aka there is no significant difference between the observed and expected proportion of observations.
+* $H_1$: at least one genre has a different probability than listed in $H_0$
+  * aka there is a significant difference between the observed and expected proportion of observations.
+* $\alpha = 0.05$
+
+
+### D. What type of test do you think you should run? How do you know?
+
+* You should run a Chi Square Goodness of Fit test because these are proportional data, and we want to compare their actual distribution to the theoretically equal theoretical distribution. 
+
+
+### E. Check the assumptions of this test.
+
+* a) random sampling is assumed 
+* b) expected values are all >5
+  * 0.2 x `r length(df)` = `r 0.2*length(df)`
+
+
+
+
+### F. Run the test and interpret the output
+
+```{r}
+
+obs_per_genre <- df %>% 
+  group_by(playlist_genre) %>% 
+  summarise(n_obs = n()) %>%
+  mutate(p_exp = 0.2,
+         n_exp = sum(n_obs)*0.2)
+
+obs_per_genre_chi <- chisq.test(x = obs_per_genre$n_obs, 
+                                p = obs_per_genre$p_exp)
+
+obs_per_genre_chi
+obs_per_genre
+```
+* The p-value ($p = `r obs_per_genre_chi[["p.value"]]`)$ is less than $\alpha = 0.05$, so I reject the null hypothesis and conclude that the proportion of observations for each genre is not equal. Comparing the observed proportion of observations to the expected proportions shows that there are more songs on the rap, pop, and r&b playlists than expected, while the latin and rock playlists have fewer songs than would be expected if the observations were equally proportioned across genres.
+
+\pagebreak
+
+# Problem 2 -- Genre Popularity
+
+Now I want to know how popular each of the genres are. This is indicated by the `highly_popular` column. I am curious if there is an association between `playlist_genre` and the proportion of highly popular songs.
+
+### A. Write out your statistical hypotheses and alpha
+
+* $H_0$: Pr(popular) = Pr(not popular) = 1/2 = 0.5, for each genre
+* $H_1$: 
+* $\alpha = 0.05$
+
+
+### B. Use the `xtabs()` function to create a cross tabulation of `highly_popular` and `playlist_genre`.
+
+```{r}
+xt <- xtabs(~playlist_genre + highly_popular, data=df)
+xt
+
+# Add marginal totals
+addmargins(xt)
+
+# Get the proportional table
+prop.table(xt, margin=1)
+
+
+```
+
+### C. Check assumptions. Which type of test should you use?
+
+* a) random sampling is assumed 
+* b) expected values are all >5 (see table above)
+* c) You should use a Chi Square Contingency Table test because we want to test the association of two factors (playlist genre & highly popular songs)
+
+
+
+### D. Run the test
+
+```{r}
+prop_popular_chi <- chisq.test(xt)
+prop_popular_chi
+
+
+```
+
+### E. Interpret the results. Are any genres more popular than expected by chance? If so, which ones?
+
+```{r}
+
+chisq.test(xt)$expected #Expected > 5
+xt
+
+#Get difference between expected and observed values
+xt - chisq.test(xt)$expected
+```
+
+* Since $p = `r prop_popular_chi[["p.value"]]`$ is less than $\alpha = 0.05$, I reject the null hypothesis and conclude that highly popular songs are not equally distributed across genres. Comparing the expected and observed values shows that `latin` and `pop` playlists contain more highly popular songs than expected by chance.
+
+
+\pagebreak
+
+# Problem 3 -- Table Creation
+
+Create two publication worthy tables in RMarkdown that show:
+
+a) The mean `track_popularity` by `playlist_genre`
+b) The top 5 artists in terms of average `track_popularity`
+
+```{r}
+library(ggpubr)
+# mean `track_popularity` by `playlist_genre`
+tbl1 <- df %>%
+          group_by(playlist_genre) %>%
+          summarise(`Mean Track Popularity` = mean(track_popularity)) %>%
+          mutate(`Mean Track Popularity` = round(`Mean Track Popularity`, digits = 3)) %>%
+          rename(`Playlist Genre` = playlist_genre)
+
+tbl1_title <- paste0("Spotify playlists in the Latin and pop 
+                      genres contain more highly popular songs 
+                      than playlists of other genres.") %>% 
+                      strwrap(42) %>% 
+                      paste(collapse = "\n")
+
+tbl1 %>%
+  ggtexttable(rows = NULL, theme = ttheme("light")) %>%
+ tab_add_title(text = tbl1_title, size = 11)
+```
+
+```{r}
+
+#  The top 5 artists in terms of average `track_popularity`
+
+tbl2 <- df %>%
+          group_by(track_artist) %>%
+          summarise(mean = mean(track_popularity)) %>%
+          slice_max(mean, n = 5) %>%
+          mutate(mean = round(mean, digits = 2)) %>%
+          rename("Artist" = track_artist,
+                 `Mean Track Popularity` = mean) 
+
+
+
+tbl2_title <- paste0("Top 5 artists by average track popularity.") 
+
+tbl2 %>% head(n=5) %>%
+  ggtexttable(rows = NULL, theme = ttheme("light")) %>%
+ tab_add_title(text = tbl2_title, size = 11)
+
+```
+
+

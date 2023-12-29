@@ -1,0 +1,151 @@
+id,Gender,Age,Race,Education,MaritalStatus,RelationshipStatus,Insured,Income,Poverty,HomeRooms,HomeOwn,Work,Weight,Height,BMI,Pulse,BPSys,BPDia,Testosterone,HDLChol,TotChol,Diabetes,DiabetesAge,nPregnancies,nBabies,SleepHrsNight,PhysActive,PhysActiveDays,AlcoholDay,AlcoholYear,SmokingStatus
+68021,male,34,Black,9 - 11th Grade,NeverMarried,Single,No,22500,1.84,4,Rent,Working,70.9,173.1,23.7,64,107,58,507.01,1.01,5.61,No,NA,NA,NA,7,No,2,NA,NA,Never
+68661,female,64,Black,College Grad,Married,Committed,Yes,100000,5,7,Own,Working,79.5,156.2,32.6,82,125,67,11.67,2.04,5.4,No,NA,1,1,5,No,NA,1,3,Never
+65038,male,13,Hispanic,NA,NA,NA,Yes,100000,NA,11,Own,NA,57.5,156.5,23.5,88,110,16,176,1.32,2.79,No,NA,NA,NA,NA,Yes,NA,NA,NA,NA
+65162,male,32,White,High School,NeverMarried,Single,Yes,60000,5,3,Rent,Working,135.8,182.2,40.9,100,149,99,296.72,1.01,5.2,No,NA,NA,NA,6,Yes,NA,NA,NA,Never
+64151,male,21,White,Some College,NeverMarried,Single,Yes,70000,3.51,7,Own,Looking,104.9,199.9,26.3,58,116,66,302.3,1.29,4.42,No,NA,NA,NA,7,Yes,NA,5,52,Never
+70547,female,39,White,9 - 11th Grade,NeverMarried,Single,Yes,12500,0.43,5,Rent,Working,63.1,164,23.5,68,117,71,20.02,1.66,4.09,No,NA,3,3,5,No,NA,1,24,Never
+64964,male,80,White,High School,Married,Committed,Yes,100000,3.33,7,Own,NotWorking,104.3,181,31.8,82,118,76,680.93,0.91,4.45,No,NA,NA,NA,9,Yes,NA,1,48,Former
+67828,male,67,Black,8th Grade,Married,Committed,Yes,17500,1.22,4,Own,Working,68.3,168.8,24,62,169,81,987.03,1.29,3.78,No,NA,NA,NA,4,No,NA,NA,0,Current
+62757,male,54,White,High School,Divorced,Single,Yes,70000,2.1,7,Rent,Working,109,173.8,36.1,90,127,77,346.5,0.88,5.79,No,NA,NA,NA,7,Yes,3,5,364,Former
+68058,male,50,White,Some College,Married,Committed,Yes,50000,2.7,5,Own,Working,100.9,181.7,30.6,NA,NA,NA,621,1.34,5.35,No,NA,NA,NA,5,No,2,3,208,Current
+62350,female,43,White,High School,Divorced,Single,Yes,40000,2.72,5,Rent,Working,58.7,162.1,22.3,70,115,67,9.63,1.86,4.47,No,NA,4,2,6,Yes,2,4,104,Current
+69419,male,57,Black,College Grad,Married,Committed,Yes,70000,4.3,7,Own,Working,108.1,190.2,29.9,62,136,80,239.82,1.16,3.83,Yes,50,NA,NA,6,Yes,NA,1,6,Never
+65742,male,30,Mexican,High School,NeverMarried,Single,No,100000,5,9,Rent,Working,63.5,163.8,23.7,100,119,76,378.45,1.11,5.02,No,NA,NA,NA,8,No,NA,12,24,Never
+66566,male,17,Asian,NA,NA,NA,No,100000,5,8,Own,NotWorking,49.3,158.9,19.5,80,103,51,352.53,1.03,4.01,No,NA,NA,NA,6,No,3,NA,NA,NA
+62440,male,22,Mexican,Some College,Married,Committed,No,40000,1.33,4,Own,Working,96.8,178.9,30.2,76,115,74,467.22,0.88,6,No,NA,NA,NA,9,Yes,7,6,104,Never
+68271,male,43,White,Some College,NeverMarried,Single,Yes,50000,4.25,3,Own,Working,74.1,170.1,25.6,68,111,75,257.53,0.91,5.84,No,NA,NA,NA,7,No,4,NA,0,Never
+62953,male,44,Asian,College Grad,Married,Committed,Yes,87500,3.47,5,Rent,Working,84.3,169.2,29.4,50,126,82,NA,NA,NA,No,NA,NA,NA,7,Yes,NA,1,52,Never
+69896,male,49,White,High School,NeverMarried,Single,Yes,100000,2.86,1,Rent,Working,74.6,177.1,23.8,68,120,77,293.59,0.98,6.98,No,NA,NA,NA,4,No,NA,5,6,Current
+68528,female,70,White,Some College,Divorced,Single,Yes,30000,2.75,6,Own,Working,103.5,155.1,43,70,133,39,9.06,0.78,4.27,Yes,70,2,2,9,No,NA,NA,0,Former
+67779,female,56,White,College Grad,Married,Committed,Yes,70000,4.3,4,Own,Looking,66,164,24.5,74,108,66,8.36,1.53,6.26,No,NA,NA,NA,6,Yes,NA,1,5,Never
+66678,male,21,White,Some College,NeverMarried,Single,Yes,17500,0.92,1,Rent,NotWorking,72.7,170.7,24.9,74,108,60,472.28,1.24,4.06,No,NA,NA,NA,6,Yes,NA,5,24,Never
+66437,male,9,Other,NA,NA,NA,Yes,12500,0.37,4,Rent,NA,42.1,133,23.8,96,98,65,1.72,1.19,2.95,No,NA,NA,NA,NA,NA,5,NA,NA,NA
+65325,female,73,White,Some College,Widowed,Single,Yes,40000,2.72,10,Own,NotWorking,52.9,160.2,20.6,70,105,50,13.5,2.12,4.42,No,NA,4,4,4,No,NA,2,208,Current
+70096,female,77,White,College Grad,Widowed,Single,Yes,40000,1.97,9,Own,NotWorking,110.9,152,48,56,115,42,40.11,1.81,4.37,No,NA,7,5,7,No,3,NA,0,Never
+65325,female,73,White,Some College,Widowed,Single,Yes,40000,2.72,10,Own,NotWorking,52.9,160.2,20.6,70,105,50,13.5,2.12,4.42,No,NA,4,4,4,No,4,2,208,Current
+69363,female,22,Mexican,High School,NeverMarried,Single,No,12500,0.54,4,Rent,Working,92.4,159.2,36.5,70,103,77,21.9,1.14,4.4,No,NA,NA,NA,8,Yes,2,NA,NA,Current
+70501,female,49,White,College Grad,Married,Committed,Yes,100000,5,7,Own,Working,87.9,165.8,32,76,116,88,18.47,1.68,6.18,No,NA,2,2,7,No,NA,1,1,Current
+67039,female,31,White,College Grad,Married,Committed,Yes,60000,3.64,3,Rent,Working,56.3,169.5,19.6,82,89,58,40.32,1.53,4.53,No,NA,NA,NA,6,Yes,7,NA,0,Former
+65340,female,25,White,Some College,Married,Committed,Yes,100000,4.97,7,Own,Working,59.6,164.3,22.1,104,115,61,NA,NA,NA,No,NA,1,1,7,No,3,2,24,Current
+69490,male,0,White,NA,NA,NA,Yes,60000,2.46,8,Own,NA,6.2,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,1,NA,NA,NA
+67293,male,53,White,College Grad,Married,Committed,Yes,100000,5,10,Own,Working,63.6,169.5,22.1,56,109,62,505.43,1.91,4.4,No,NA,NA,NA,7,Yes,NA,1,52,Never
+63551,female,54,White,High School,Married,Committed,Yes,100000,3.44,11,Own,Working,77.8,164.9,28.6,66,132,71,18.03,1.32,3.72,No,NA,3,3,7,No,NA,1,52,Never
+67552,female,16,White,NA,NA,NA,Yes,100000,4.07,7,Own,Looking,49.2,161,19,102,106,69,12.01,2.09,4.06,No,NA,NA,NA,7,Yes,NA,NA,NA,NA
+68177,male,62,White,College Grad,Married,Committed,Yes,17500,1.19,5,Own,Working,88,181.2,26.8,74,104,41,321.4,1.19,4.16,Yes,NA,NA,NA,9,No,NA,4,364,Current
+67040,female,19,Mexican,NA,NA,NA,No,60000,0.14,4,Rent,Working,71.5,163.4,26.8,76,83,58,41.92,1.22,3.85,No,NA,NA,NA,8,Yes,NA,6,52,NA
+63463,female,61,White,Some College,Married,Committed,Yes,100000,5,6,Own,Working,65.3,173.3,21.7,64,134,82,39.51,1.78,4.86,No,NA,NA,NA,6,No,1,3,260,Current
+67544,female,55,Black,Some College,Separated,Single,Yes,2500,0.2,7,Own,Working,88.9,164.8,32.7,NA,NA,NA,51.27,1.5,7.58,No,NA,2,2,7,No,4,3,10,Current
+70639,female,34,Mexican,8th Grade,LivePartner,Committed,No,40000,1.42,5,Rent,Working,83.2,159.9,32.5,NA,NA,NA,8.67,1.4,6.59,No,NA,5,4,10,No,2,NA,NA,Never
+64197,female,80,Black,College Grad,Widowed,Single,Yes,100000,4.2,5,Own,NotWorking,40.2,148.1,18.3,52,148,64,12.14,1.14,6.18,No,NA,2,2,8,No,5,NA,0,Former
+71754,male,0,White,NA,NA,NA,Yes,100000,5,6,Own,NA,5.6,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+67038,male,11,White,NA,NA,NA,Yes,30000,1.12,6,Own,NA,45.5,163.3,17.1,94,113,47,419.55,1.06,2.59,No,NA,NA,NA,NA,NA,5,NA,NA,NA
+62256,male,80,White,8th Grade,Married,Committed,Yes,22500,1.63,6,Own,NotWorking,77.8,173.1,26,54,121,54,417.21,0.85,3.28,No,NA,NA,NA,6,No,NA,1,12,Former
+64760,male,4,White,NA,NA,NA,Yes,60000,2.68,7,Own,NA,21.7,111,17.6,NA,NA,NA,NA,NA,NA,No,NA,NA,NA,NA,NA,NA,NA,NA,NA
+63046,male,1,White,NA,NA,NA,Yes,30000,1.73,7,Own,NA,11.9,NA,NA,NA,NA,NA,NA,NA,NA,No,NA,NA,NA,NA,NA,NA,NA,NA,NA
+62383,male,23,White,College Grad,NeverMarried,Single,Yes,100000,1.38,13,Rent,Working,90.6,184.1,26.7,68,121,65,420.86,1.24,5.38,No,NA,NA,NA,7,Yes,NA,4,156,Never
+66593,male,13,Mexican,NA,NA,NA,Yes,100000,3.37,5,Own,NA,79,166.6,28.5,80,119,44,164.94,0.88,4.14,No,NA,NA,NA,NA,Yes,NA,NA,NA,NA
+62644,male,61,Black,Some College,Widowed,Single,Yes,22500,1.79,7,Own,NotWorking,119.7,168.8,42,66,134,80,39.68,1.32,3.72,Yes,35,NA,NA,6,No,NA,NA,0,Former
+68043,female,32,White,Some College,Married,Committed,Yes,60000,4.01,6,Other,Working,65.5,167.7,23.3,64,98,58,19.7,1.84,5.92,No,NA,3,NA,8,Yes,NA,2,156,Former
+70581,female,63,White,9 - 11th Grade,Married,Committed,Yes,40000,2.86,7,Own,Working,66.6,154.5,27.9,82,114,70,39.6,1.29,6.83,No,NA,6,6,7,No,NA,2,12,Never
+68286,female,16,White,NA,NA,NA,Yes,NA,NA,NA,NA,Working,53.4,164.3,19.8,80,105,65,9.57,1.45,3.72,No,NA,NA,NA,5,Yes,NA,NA,NA,NA
+68285,female,49,White,High School,Married,Committed,Yes,60000,3.97,8,Own,NotWorking,107.8,162.2,41,80,102,73,30.74,1.29,4.99,Yes,39,3,3,9,No,NA,NA,0,Never
+62222,male,32,White,College Grad,Married,Committed,Yes,100000,5,3,Rent,Working,80.1,179,25,78,104,73,343.14,1.32,5.53,No,NA,NA,NA,7,No,NA,2,52,Never
+63320,female,27,Asian,College Grad,Married,Committed,No,40000,2.72,2,Rent,Working,48.6,152.5,20.9,64,102,71,24.93,1.73,3.49,No,NA,NA,NA,6,Yes,NA,NA,NA,Never
+71052,female,18,Mexican,NA,NA,NA,No,NA,NA,3,Rent,NotWorking,57.2,155.5,23.7,90,113,0,17.99,1.22,4.5,No,NA,NA,NA,8,No,7,2,36,NA
+65889,male,30,Hispanic,Some College,NeverMarried,Single,No,30000,1.57,7,Own,Working,98.9,170.7,33.9,104,138,84,420.74,1.03,3.54,No,NA,NA,NA,7,Yes,3,4,36,Never
+64115,male,8,Black,NA,NA,NA,Yes,100000,4.9,12,Own,NA,27.3,131.5,15.8,66,93,47,NA,2.02,5.17,No,NA,NA,NA,NA,NA,3,NA,NA,NA
+68622,female,70,White,Some College,Married,Committed,Yes,40000,2.72,6,Rent,NotWorking,63.4,160.7,24.6,66,124,77,28.1,2.02,6.36,No,NA,6,5,7,No,3,1,3,Former
+62291,male,56,Other,Some College,Married,Committed,Yes,87500,5,6,Own,Working,91.9,175.4,29.9,60,118,65,257.94,1.11,3.44,No,NA,NA,NA,7,Yes,7,3,3,Never
+63437,female,23,White,College Grad,NeverMarried,Single,Yes,30000,1.38,5,Rent,Working,74.3,175.4,24.2,76,105,67,NA,NA,NA,No,NA,NA,NA,8,Yes,2,2,52,Never
+71463,male,0,Mexican,NA,NA,NA,Yes,100000,3.33,7,Own,NA,8.1,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,6,NA,NA,NA
+69035,male,68,White,Some College,Married,Committed,Yes,87500,5,5,Rent,Working,92.6,181.2,28.2,44,112,55,653.96,0.98,4.27,No,NA,NA,NA,6,No,5,2,104,Current
+68474,male,35,White,College Grad,Married,Committed,Yes,87500,4.71,9,Own,Working,91.5,185.7,26.5,68,114,78,345.46,1.06,5.28,No,NA,NA,NA,8,Yes,7,1,52,Never
+64376,male,58,White,High School,Divorced,Single,Yes,12500,0.65,12,Own,NotWorking,67.8,173.7,22.5,82,136,73,439.94,0.96,4.32,No,NA,NA,NA,7,No,4,2,12,Current
+62827,female,0,Other,NA,NA,NA,Yes,30000,1.28,6,Own,NA,6.2,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+67727,female,32,White,Some College,Married,Committed,Yes,22500,1.45,7,Rent,NotWorking,74.5,164,27.7,68,112,61,22.22,1.03,5.2,No,NA,NA,NA,7,Yes,NA,1,4,Current
+63714,male,48,White,Some College,Married,Committed,Yes,100000,4.97,7,Own,Working,107.3,171.1,36.7,70,115,68,166,1.63,4.37,No,NA,NA,NA,7,No,NA,1,312,Never
+64793,female,14,Hispanic,NA,NA,NA,Yes,87500,4.19,4,Rent,NA,57.1,164.6,21.1,68,112,71,25.97,1.63,3.83,No,NA,NA,NA,NA,No,1,NA,NA,NA
+69219,male,4,Hispanic,NA,NA,NA,Yes,30000,1.25,5,Rent,NA,29.2,108,25,NA,NA,NA,NA,NA,NA,No,NA,NA,NA,NA,NA,NA,NA,NA,NA
+69138,female,16,White,NA,NA,NA,Yes,50000,1.45,5,Rent,NotWorking,60.1,160.8,23.2,70,109,75,31.58,1.24,3.1,No,NA,NA,NA,6,Yes,1,NA,NA,NA
+66591,male,34,White,College Grad,Married,Committed,Yes,100000,3.7,11,Own,Working,99.5,168.5,35,74,120,87,377.26,1.11,4.19,No,NA,NA,NA,5,Yes,3,2,208,Former
+70858,female,9,White,NA,NA,NA,Yes,70000,2.77,9,Own,NA,50.1,150.6,22.1,92,103,49,9.11,1.01,3.72,No,NA,NA,NA,NA,NA,2,NA,NA,NA
+67450,male,55,White,Some College,NeverMarried,Single,Yes,100000,2.24,1,Rent,Working,105.8,177.5,33.6,68,136,89,281.33,1.94,5.72,No,NA,NA,NA,6,No,3,5,260,Current
+65458,male,63,White,College Grad,Married,Committed,Yes,100000,5,10,Own,Working,113.4,193.7,30.2,58,122,68,218.45,1.01,4.86,No,NA,NA,NA,8,No,NA,1,24,Never
+66032,male,36,Hispanic,Some College,LivePartner,Committed,Yes,87500,3.45,5,Rent,Working,84.3,170.5,29,60,106,53,296.77,0.91,5.66,No,NA,NA,NA,5,Yes,1,3,24,Never
+64570,female,65,White,Some College,Widowed,Single,Yes,7500,0.72,3,Rent,NotWorking,NA,NA,NA,84,117,58,NA,NA,NA,No,NA,4,4,6,No,NA,NA,NA,Never
+63520,female,0,White,NA,NA,NA,Yes,100000,4.77,8,Own,NA,4.8,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+69910,male,20,White,9 - 11th Grade,NeverMarried,Single,Yes,30000,0.97,3,Rent,Working,63.1,175.5,20.5,68,119,69,579.84,1.71,4.5,No,NA,NA,NA,7,No,NA,4,36,Current
+63463,female,61,White,Some College,Married,Committed,Yes,100000,5,6,Own,Working,65.3,173.3,21.7,64,134,82,39.51,1.78,4.86,No,NA,NA,NA,6,No,7,3,260,Current
+70790,male,49,White,College Grad,Married,Committed,Yes,100000,5,8,Own,Working,79,178.2,24.9,72,118,62,559.72,1.22,5.82,No,NA,NA,NA,8,Yes,5,1,364,Never
+68693,male,28,White,Some College,NeverMarried,Single,Yes,100000,4.14,8,Own,Working,80.9,177.1,25.8,58,132,74,653.19,1.84,4.55,No,NA,NA,NA,7,Yes,NA,NA,0,Never
+71697,male,74,White,8th Grade,Married,Committed,Yes,17500,1.16,5,Own,NotWorking,86.8,174.3,28.6,68,143,76,347.53,1.27,4.84,No,NA,NA,NA,8,No,3,NA,0,Former
+69051,female,5,White,NA,NA,NA,Yes,100000,5,9,Own,NA,16.5,106,14.7,NA,NA,NA,NA,NA,NA,No,NA,NA,NA,NA,NA,3,NA,NA,NA
+67910,male,80,Hispanic,NA,Married,Committed,Yes,NA,NA,7,Other,NotWorking,56,159.4,22,NA,NA,NA,NA,NA,NA,No,NA,NA,NA,8,No,NA,NA,0,Never
+66097,female,11,Other,NA,NA,NA,Yes,22500,0.65,4,Rent,NA,66,145.5,31.2,82,105,63,16.69,1.34,3.08,No,NA,NA,NA,NA,NA,NA,NA,NA,NA
+63788,female,40,White,High School,Divorced,Single,Yes,12500,0.92,3,Rent,Working,49.3,164.5,18.2,102,115,74,22.34,1.34,4.86,No,NA,3,2,7,Yes,7,2,4,Current
+63003,male,40,White,9 - 11th Grade,Married,Committed,Yes,NA,NA,6,Rent,Working,119.2,187,34.1,72,114,68,453,0.85,4.71,No,NA,NA,NA,6,No,2,NA,0,Current
+67833,male,80,White,9 - 11th Grade,Married,Committed,Yes,22500,1.32,6,Own,NotWorking,77.9,172,26.3,44,101,50,262.44,1.14,3.34,No,NA,NA,NA,8,No,2,NA,0,Never
+64870,female,80,Asian,High School,Widowed,Single,Yes,60000,1.78,9,Own,NotWorking,57.9,155.3,24,56,95,31,NA,NA,NA,Yes,57,10,7,7,Yes,NA,NA,0,Never
+70754,female,15,White,NA,NA,NA,Yes,60000,2.88,11,Own,NA,67.6,159.7,26.5,72,102,64,26.87,1.5,4.47,No,NA,NA,NA,NA,No,NA,NA,NA,NA
+67200,male,30,White,College Grad,NeverMarried,Single,Yes,100000,4.41,4,Rent,Working,86.6,180.2,26.7,70,113,68,824.96,1.03,5.28,No,NA,NA,NA,9,Yes,4,3,208,Former
+68679,male,43,Other,Some College,Married,Committed,No,22500,1.36,6,Rent,Working,105.1,177.2,33.5,72,126,74,358.64,0.75,5.15,No,NA,NA,NA,4,Yes,5,1,120,Current
+65540,male,9,White,NA,NA,NA,Yes,60000,2.6,10,Own,NA,34.6,135.7,18.8,72,93,0,3.89,1.73,4.37,No,NA,NA,NA,NA,NA,4,NA,NA,NA
+63794,male,4,White,NA,NA,NA,Yes,100000,5,7,Own,NA,15.5,102.4,14.8,NA,NA,NA,NA,NA,NA,No,NA,NA,NA,NA,NA,3,NA,NA,NA
+69279,female,58,White,College Grad,Married,Committed,Yes,100000,5,10,Own,Working,80.1,170.1,27.7,76,132,73,18.64,1.66,4.84,No,NA,2,2,7,Yes,7,2,364,Former
+68202,male,9,White,NA,NA,NA,Yes,100000,5,10,Own,NA,31.9,138.3,16.7,86,102,26,3.72,1.4,4.47,No,NA,NA,NA,NA,NA,1,NA,NA,NA
+62661,male,35,White,Some College,NeverMarried,Single,No,87500,3.67,8,Rent,Working,74.2,187.3,21.2,78,107,71,429.65,1.16,7.11,No,NA,NA,NA,6,Yes,1,15,104,Current
+68876,female,78,White,High School,Married,Committed,Yes,100000,5,10,Own,NotWorking,68.1,158.6,27.1,64,146,76,NA,1.11,4.73,No,NA,NA,NA,8,Yes,2,NA,NA,Never
+66710,male,66,Asian,College Grad,Married,Committed,No,40000,1.83,4,Rent,Working,69.6,167.9,24.7,66,138,69,373.67,0.96,4.86,No,NA,NA,NA,6,No,NA,NA,NA,Never
+70424,male,28,Hispanic,9 - 11th Grade,LivePartner,Committed,Yes,60000,3.97,6,Rent,Working,99,171.7,33.6,90,126,83,254.08,0.8,4.42,No,NA,NA,NA,5,No,NA,5,1,Current
+68467,female,47,White,College Grad,Married,Committed,Yes,100000,5,9,Own,NotWorking,62.5,165.6,22.8,120,156,99,13.18,0.93,8.46,No,NA,2,2,5,Yes,3,2,104,Never
+64799,male,28,Mexican,8th Grade,Married,Committed,No,NA,NA,5,Rent,Working,80,164.4,29.6,NA,NA,NA,329.56,0.98,4.97,No,NA,NA,NA,8,No,3,2,364,Never
+70541,female,13,Hispanic,NA,NA,NA,Yes,17500,0.75,8,Rent,NA,53.8,163.6,20.1,64,111,59,21.55,1.22,4.19,No,NA,NA,NA,NA,No,5,NA,NA,NA
+64430,male,65,Other,Some College,Married,Committed,Yes,NA,NA,10,Own,NotWorking,93.2,181.3,28.4,60,138,76,312.62,0.88,4.63,Yes,NA,NA,NA,5,No,NA,2,3,Former
+65440,male,61,Black,High School,Married,Committed,Yes,50000,2.67,5,Own,NotWorking,71.3,176.7,22.8,72,146,76,722,1.29,3.39,No,NA,NA,NA,5,No,7,1,3,Former
+70754,female,15,White,NA,NA,NA,Yes,60000,2.88,11,Own,NA,67.6,159.7,26.5,72,102,64,26.87,1.5,4.47,No,NA,NA,NA,NA,No,3,NA,NA,NA
+71909,male,28,Mexican,9 - 11th Grade,NeverMarried,Single,No,7500,0.46,3,Rent,Working,92.3,177.3,29.4,68,124,65,490.43,1.22,3.9,No,NA,NA,NA,6,Yes,NA,NA,NA,Current
+68447,female,68,White,Some College,Divorced,Single,Yes,7500,0.78,3,Rent,NotWorking,115.6,167.6,41.2,62,143,67,17.15,1.55,5.59,No,NA,5,2,5,Yes,2,NA,NA,Never
+64511,female,64,White,Some College,Married,Committed,Yes,60000,4.15,5,Own,NotWorking,86.4,160,33.8,90,135,62,19.17,1.19,5.97,No,NA,4,3,8,No,NA,2,104,Current
+66946,male,32,Other,Some College,Married,Committed,No,30000,1.33,4,Rent,Working,117.3,180.6,36,86,125,58,158.96,1.37,4.81,No,NA,NA,NA,4,Yes,NA,6,72,Never
+68824,female,80,Hispanic,9 - 11th Grade,Married,Committed,Yes,30000,2.24,3,Rent,NotWorking,48.5,144.4,23.3,56,141,45,42.57,1.63,6.7,No,NA,2,2,8,No,3,2,104,Never
+71008,male,50,Black,Some College,Married,Committed,Yes,87500,5,7,Own,Working,110.5,187.5,31.4,68,111,75,255.26,1.42,8.07,No,NA,NA,NA,5,Yes,7,10,156,Never
+68515,male,13,Other,NA,NA,NA,Yes,50000,1.91,4,Rent,NA,66.3,158.4,26.4,70,112,37,76.69,0.93,3.83,No,NA,NA,NA,NA,No,3,NA,NA,NA
+69698,male,49,Black,High School,Divorced,Single,Yes,7500,0.19,4,Rent,NotWorking,105,174.4,34.5,64,125,70,229.82,1.14,4.01,Yes,40,NA,NA,6,Yes,3,NA,0,Never
+67285,female,70,Hispanic,College Grad,Widowed,Single,Yes,30000,2.89,6,Own,Working,89.7,156.6,36.6,70,152,84,20.88,1.34,5.17,No,NA,1,1,8,No,NA,NA,0,Never
+69742,male,4,Asian,NA,NA,NA,Yes,70000,4.76,5,Own,NA,18.8,112.5,14.9,NA,NA,NA,NA,NA,NA,No,NA,NA,NA,NA,NA,NA,NA,NA,NA
+71143,female,53,Black,College Grad,Married,Committed,Yes,100000,5,8,Own,Working,60.3,169.6,21,70,102,71,14.57,2.02,5.74,No,NA,2,2,7,Yes,3,NA,NA,Never
+69702,male,42,White,Some College,LivePartner,Committed,Yes,NA,NA,8,Own,Working,92,185.1,26.9,76,118,72,363.12,1.01,4.81,No,NA,NA,NA,8,Yes,NA,4,104,Never
+62476,male,40,White,High School,NeverMarried,Single,No,30000,1.29,8,Rent,NotWorking,75.8,171.5,25.8,76,115,68,414.71,1.14,4.53,No,NA,NA,NA,7,Yes,NA,1,2,Never
+67513,male,53,Black,High School,Married,Committed,Yes,7500,0.5,4,Rent,NotWorking,70.8,175,23.1,82,136,75,522.42,1.53,4.42,No,NA,NA,NA,6,No,7,3,104,Current
+67390,female,56,White,College Grad,Divorced,Single,Yes,60000,4.92,6,Own,NotWorking,47,160.6,18.2,102,95,67,34.13,2.17,5.02,No,NA,NA,NA,9,No,2,3,260,Current
+68040,male,25,White,Some College,NeverMarried,Single,Yes,50000,3.4,6,Own,Working,109.9,185.1,32.1,68,122,79,176.61,0.91,4.84,No,NA,NA,NA,8,Yes,5,8,104,Never
+70180,male,4,Black,NA,NA,NA,Yes,30000,1,5,Rent,NA,14.4,101.3,14,NA,NA,NA,NA,NA,NA,No,NA,NA,NA,NA,NA,7,NA,NA,NA
+67560,male,68,Asian,8th Grade,NeverMarried,Single,Yes,30000,0.59,5,Own,Working,52.5,159.7,20.6,70,146,54,511.22,1.99,4.47,No,NA,NA,NA,6,No,1,8,364,Former
+69502,female,50,White,College Grad,NeverMarried,Single,Yes,50000,4.87,4,Own,Working,78.1,164.4,28.9,84,121,88,18.9,1.63,8.22,No,NA,NA,NA,8,Yes,4,1,156,Never
+68270,female,48,Hispanic,9 - 11th Grade,LivePartner,Committed,Yes,60000,4.21,4,Rent,Working,88.1,161,34,74,118,87,21.67,0.98,5.74,No,NA,2,2,8,Yes,NA,NA,NA,Never
+65841,male,63,White,College Grad,NeverMarried,Single,Yes,100000,5,6,Own,Working,114.6,183.1,34.2,68,114,66,424.45,1.32,6.03,No,NA,NA,NA,5,Yes,NA,5,104,Current
+71244,female,64,White,College Grad,Divorced,Single,Yes,100000,5,7,Own,NotWorking,67.8,163.1,25.5,72,112,65,9.9,1.66,4.68,No,NA,3,2,8,Yes,3,1,52,Never
+66373,female,68,White,9 - 11th Grade,Married,Committed,Yes,12500,0.86,4,Rent,NotWorking,86.5,147.3,39.9,76,133,53,6.7,1.34,5.38,Yes,55,6,4,8,Yes,NA,NA,0,Former
+62720,male,58,White,College Grad,Married,Committed,Yes,100000,5,7,Own,Working,73.8,168.1,26.1,84,128,76,137.92,1.47,6.44,No,NA,NA,NA,6,No,3,1,2,Never
+71439,female,3,White,NA,NA,NA,Yes,87500,2.44,10,Own,NA,15.2,99.5,15.4,NA,NA,NA,NA,NA,NA,No,NA,NA,NA,NA,NA,NA,NA,NA,NA
+65938,male,0,Mexican,NA,NA,NA,Yes,17500,0.89,3,Rent,NA,7.8,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+63540,female,57,White,9 - 11th Grade,Divorced,Single,No,12500,1.24,6,Own,Looking,92.7,160.4,36,68,133,90,11.48,1.5,4.94,No,NA,4,2,5,Yes,NA,2,104,Never
+66753,female,2,White,NA,NA,NA,Yes,30000,0.81,8,Own,NA,11.3,83.8,16.1,NA,NA,NA,NA,NA,NA,No,NA,NA,NA,NA,NA,3,NA,NA,NA
+66347,male,80,White,8th Grade,Married,Committed,Yes,NA,NA,5,Own,NotWorking,69.7,169,24.4,90,172,66,430.75,1.22,6.31,No,NA,NA,NA,7,No,3,1,60,Former
+70686,female,48,Black,College Grad,NeverMarried,Single,Yes,100000,5,8,Own,Working,122.5,164.1,45.5,70,125,90,31.21,1.68,4.6,No,NA,NA,NA,7,No,NA,NA,0,Never
+66851,female,46,White,Some College,Widowed,Single,Yes,100000,5,8,Own,Working,83.8,170.9,28.7,80,124,79,15.77,1.66,6.1,No,NA,3,3,7,No,2,2,156,Former
+69750,male,44,White,College Grad,Married,Committed,Yes,100000,4.47,8,Own,Working,91,175,29.7,84,124,71,229.96,0.93,5.64,No,NA,NA,NA,6,No,3,1,24,Never
+69625,male,29,White,Some College,Married,Committed,Yes,100000,5,3,Rent,Working,89.8,183.8,26.6,70,119,72,377.81,1.29,5.48,No,NA,NA,NA,7,No,NA,4,156,Never
+65346,female,49,Black,College Grad,Married,Committed,Yes,87500,3.06,7,Own,Working,62.5,155.1,26,66,140,74,NA,2.3,5.72,No,NA,3,3,6,Yes,1,1,3,Never
+71797,male,80,White,High School,Widowed,Single,Yes,NA,NA,NA,NA,NotWorking,NA,182.6,NA,74,153,52,401,0.72,3.65,Yes,30,NA,NA,8,No,5,1,156,Never
+71459,female,14,White,NA,NA,NA,Yes,100000,5,8,Own,NA,49.9,162.4,18.9,108,104,71,24.26,1.34,4.19,No,NA,NA,NA,NA,Yes,7,NA,NA,NA
+68196,female,45,White,Some College,Married,Committed,Yes,100000,5,8,Own,Working,75.4,164.1,28,78,111,84,27.08,1.32,4.86,No,NA,1,1,8,No,3,2,5,Former
+66194,female,63,White,College Grad,Married,Committed,Yes,100000,5,6,Own,Working,61.6,149.9,27.4,76,105,78,36.63,1.99,5.33,No,NA,1,NA,7,Yes,4,1,12,Former
+64675,male,46,White,College Grad,Married,Committed,No,100000,5,13,Own,Working,77.3,184.9,22.6,54,119,72,778.25,1.71,4.06,No,NA,NA,NA,7,Yes,NA,4,12,Never
+69838,male,31,Hispanic,High School,Married,Committed,Yes,30000,1.35,4,Rent,Working,155.4,181.3,47.3,96,115,85,162.85,1.19,6.03,No,NA,NA,NA,4,No,7,3,9,Never
+71592,female,8,Mexican,NA,NA,NA,Yes,60000,2.29,4,Rent,NA,66.3,156.1,27.2,100,115,63,9.32,0.83,4.29,No,NA,NA,NA,NA,NA,NA,NA,NA,NA
+64857,female,54,White,College Grad,Divorced,Single,No,17500,1.34,6,Own,Working,108.7,151,47.7,78,127,78,15.22,1.03,5.2,Yes,49,5,3,8,Yes,5,1,12,Never
+66168,female,8,White,NA,NA,NA,Yes,40000,2.38,3,Rent,NA,23.2,126.5,14.5,92,93,48,NA,0.98,3.49,No,NA,NA,NA,NA,NA,2,NA,NA,NA
+63956,female,33,White,College Grad,Married,Committed,Yes,100000,5,7,Own,Working,73.7,169.4,25.7,92,124,84,20.3,1.4,5.17,No,NA,NA,NA,6,Yes,NA,NA,NA,Never
+63584,female,30,Black,High School,NeverMarried,Single,No,12500,0.38,4,Rent,NotWorking,72.7,156.1,29.8,88,110,62,35.98,1.6,3.98,No,NA,5,3,8,No,NA,NA,NA,Never

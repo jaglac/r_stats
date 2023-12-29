@@ -1,0 +1,348 @@
+---
+title: "HW5"
+author: "Caitlin Jagla"
+date: "03/28/2022"
+output: pdf_document
+---
+
+
+# 1. pwr
+
+Using the pwr package, estimate the power of a two-sided, two-sample t-test to detect the difference between the mean relative vascularized areas for WT cells versus mutants. Use a significance level (alpha) of 0.05 and a pooled standard deviation of .036.
+
+Your pilot study indicates the following:
+
+>WT: 	    ybar = 0.106, n = 5
+
+>Mutant: 	ybar = 0.161, n = 7
+
+### A. Calculate the effect size. Is this effect size small (~.3), medium (~.5), or large (~.8)?
+
+```{r}
+#Effect size (Cohen's d) - difference between the means divided by the pooled standard deviation 
+d <- (0.161 - 0.106)/0.036
+
+d
+```
+
+
+
+>\textcolor{blue}{The effect size for a two-sample t-test is the difference in means divided by the pooled SD, which in this case is `r round( (0.161 - 0.106)/0.036, digits = 3)`, which is large.} 
+
+
+### B. Calculate the power and interpret your findings
+
+```{r, message=FALSE, warning=FALSE}
+library(pwr)
+
+pwr <- pwr.t2n.test(n1 = 5, n2 = 7, d = d, sig.level = 0.05, alternative="two.sided") 
+pwr
+
+```
+
+
+
+>\textcolor{blue}{The power is `r pwr$power`, meaning there is a `r round(pwr[["power"]]*100)`\% probability of rejecting $H_0$ if $H_0$ is false, given the observed effect size.}
+
+
+
+
+### C. What sample sizes would the experimenter need to reach power of 0.90? Try out some different n1 and n2 values and explain the effect of unbalanced sample sizes on power.
+
+
+```{r}
+# calculate sample sizes needed to reach power = 0.90 (with equal n)
+pwr90 <- pwr.t.test(d = d, power = 0.90, 
+                    sig.level = 0.05, alternative="two.sided") 
+pwr90
+
+# see what n2 is required to maintain 0.90 power,
+# if n1 is less than required when n's are equal 
+pwr_n1low <- pwr.t2n.test(n1 = 8, d = d, power = 0.90, 
+                          sig.level = 0.05, alternative="two.sided") 
+pwr_n1low
+
+# see what n2 is required to maintain 0.90 power,
+# if n1 is greater than required when n's are equal 
+pwr_n1high <- pwr.t2n.test(n1 = 18, d = d, power = 0.90, 
+                           sig.level = 0.05, alternative="two.sided") 
+pwr_n1high
+```
+>|  \textcolor{blue}{If $n$ for both groups is equal, then `r ceiling(pwr90[["n"]])` samples are needed per group to reach $power = 0.90$.}
+>
+>|  \textcolor{blue}{If $n_1$ is less than the $n$ required to achieve $power = 0.90$ when $n_1 = n_2$, then $n_2$ must be higher to compensate. In this example, $n_1= `r pwr_n1low[["n1"]]`$ results in a requirement of $n_2=`r ceiling(pwr_n1low[["n2"]])`$ to achieve $power = 0.90$.}
+>
+>|  \textcolor{blue}{Conversely, if $n_1$ is greater than the $n$ required to achieve $power = 0.90$ when $n$ of both groups are equal, then $n_2$ can be lower. In this example, $n_1=`r pwr_n1high[["n1"]]`$ results in a requirement of $n_2=`r ceiling(pwr_n1high[["n2"]])`$ to achieve $power = 0.90$.}
+
+
+\pagebreak
+# 2. nhanes
+
+Use the nhanes.csv dataset to assess the difference in Testosterone values in adult males with health insurance and those without. Make sure to follow all the steps of hypothesis testing and clearly state your conclusions about the test assumptions to validate your choice of test.
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+nh <- read_csv("nhanes.csv") 
+```
+
+### A.	Filter the dataset so that only males at or above age 18 are included. Then filter out participants who are missing values on the Testosterone or on the Insured variable. Print your dataset (not the whole thing, please!) to illustrate that the filtering step worked
+
+```{r}
+nh <- nh |> filter(Gender == "male" & Age >= 18 & !is.na(Testosterone) & Insured != "No")
+
+nh
+```
+
+### B.	Clearly state your hypotheses
+
+>|  \textcolor{blue}{I hypothesize that adult men with diabetes have lower testosterone levels than adult men without diabetes.}
+>
+>|  \textcolor{blue}{Put in a more formal way,} 
+>
+>|        \textcolor{blue}{$H_0$: mean testosterone levels do not differ between adult men with and without diabetes.}
+>
+>|        \textcolor{blue}{$H_1$: mean testosterone levels differ between adult men with and without diabetes.}
+>
+>|        \textcolor{blue}{$\alpha = 0.05$}
+
+### C.	Show an exploratory plot
+
+```{r}
+nh |> group_by(Diabetes) |> summarise(n = n(),
+                                         mean = mean(Testosterone),
+                                         sd = sd(Testosterone))
+nh |>
+  ggplot(aes(x = Diabetes, y = Testosterone)) + geom_boxplot()
+
+
+```
+
+
+### D.	Check the assumptions of a two-sample t-test and clearly explain your logic of which hypothesis test to conduct based on your assessment of the assumptions.
+
+
+```{r}
+# check normality
+p_qq <- nh |> 
+          ggplot(aes(sample = Testosterone, color = Diabetes)) + 
+          geom_qq(show.legend=FALSE) + geom_qq_line(show.legend=FALSE) +
+          facet_wrap(~Diabetes) +
+          labs(title = "Normality of testosterone levels in adult men") + 
+          theme_classic()
+p_qq
+
+
+# check within-group variance / distribution with density plot
+p_dens <- nh |> 
+            ggplot(aes(x = Testosterone, fill = Diabetes)) + 
+              geom_density(alpha = 0.5) +
+              labs(title = "Testosterone levels by diabetes status") + 
+              theme_classic()
+p_dens
+
+# check within-group variance with descriptive statistics
+summary_stats <- nh |> 
+                    group_by(Diabetes) |> 
+                    summarize(n = n(),
+                              median = median(Testosterone),
+                              mean = mean(Testosterone), 
+                              stdev = sd(Testosterone),
+                              variance = var(Testosterone)) 
+
+summary_stats
+```
+
+>|  \textcolor{blue}{Because each datapoint represents a separate man, I can be sure that these data are independently sampled.}
+>
+>|  \textcolor{blue}{Based on the density plot and the descriptive statistics, the two groups do not have equal variance.}
+>
+>|  \textcolor{blue}{Based on the QQ plot and density plot, these data seem somewhat normally distributed. However, there are long tails among the men without diabetes, particularly the upper tail, and a single outlier on the low end for the men with diabetes. Because of this, I would rather not assume normality, just to be safe.}
+>
+>|  \textcolor{blue}{For these reasons, I will run a Wilcoxon-Mann-Whitney U-test. This will slightly alter the hypotheses such that:}
+
+>|        \textcolor{blue}{$H_0$: men with and without diabetes have the same distribution of testosterone levels.}
+>
+>|        \textcolor{blue}{$H_1$: men with and without diabetes have different distributions of testosterone levels.}
+>
+>|        \textcolor{blue}{$\alpha = 0.05$}
+
+### E.	Run the test and interpret the results
+
+```{r}
+wt <- wilcox.test(Testosterone ~ Diabetes, data = nh)
+wt
+```
+
+
+
+
+>|  \textcolor{blue}{There is no difference in the distributions of testosterone levels in men with vs. without diabetes ($p = `r round(wt[["p.value"]], digits = 3)`$, which is greater than $\alpha = 0.05$).}
+
+
+### F.  Which descriptive statistics would you use to describe the results (mean/sd or median/IQR)?
+
+
+>|  \textcolor{blue}{Median and IQR should be used to describe the results, because the Wilcoxon-Mann-Whitney U-test compares the distributions of two groups, not the means.}
+
+```{r, warning=FALSE}
+
+library(ggpubr)
+
+# use ggpubr to make pretty plot 
+# display individual data points, group median and IQR, and the t-test result
+p <- nh |> 
+  ggstripchart(
+  # assign aes() parameters
+      x = "Diabetes", y = "Testosterone", 
+      color = "Diabetes", size = 3,
+  # plot median and IQR overlaid on stripchart of individual datapoints
+      add = "median_iqr",
+  # format plot visualization of median and IQR
+      add.params = list(color = "black", width = 0.4), error.plot = "crossbar",
+  # set plot labels
+      title = "Effect of diabetes on testosterone in adult men",
+      subtitle = "Testosterone levels, median & IQR",
+      xlab = "Diabetes Status",
+      ylab = "Testosterone Levels") +
+  # hide legend
+      rremove("legend") +
+  # annotate plot with pvalue from unpooled, unpaired t-test
+      stat_compare_means(method = "wilcox", 
+                         method.args = list(alternative = "two.sided", paired = FALSE),
+                         label.x.npc = "right")
+
+p
+
+```
+
+
+\pagebreak
+# 3. penguins
+
+Use the penguins dataset from the palmerpenguins package to assess the difference in flipper length
+(flipper_length_mm) for Adelie and Chinstrap penguins. Make sure to follow all the steps of hypothesis testing and clearly state your conclusions about the test assumptions to validate your choice of test.
+
+```{r, message = FALSE, warning=FALSE}
+library(palmerpenguins)
+penguins
+```
+
+### A. Use the filter() function to subset the penguins dataset so that only males from the Adelie and Chinstrap species are included (no females and no Gentoo species). Save the result intoan object and show the resulting object in the report. The resulting dataset should have dimensions 107 x 8
+
+
+```{r}
+df <- penguins |>
+        filter(sex == "male" & species != "Gentoo")
+glimpse(df)
+```
+
+
+### B.	Clearly state your hypotheses
+
+>|  \textcolor{blue}{I hypothesize that Chinstrap penguins have longer bills than Adelie penguins.}
+>
+>|  \textcolor{blue}{Put in a more formal way,} 
+>
+>|        \textcolor{blue}{$H_0$: bill lengths do not differ between penguin species.}
+>
+>|        \textcolor{blue}{$H_1$: mean bill length is longer in Chinstrap penguins than Adelie penguins.}
+>
+>|        \textcolor{blue}{$\alpha = 0.05$}
+
+### C.	Show an exploratory plot
+
+
+```{r}
+df |>
+  ggplot(aes(x = species, y = bill_length_mm, fill = species)) +
+  geom_boxplot() + theme_classic()
+```
+
+
+### D.	Check the assumptions of a two-sample t-test and clearly explain your logic of which hypothesis test to conduct based on your assessment of the assumptions.
+
+
+```{r}
+# check normality
+p2_qq <- df |> 
+          ggplot(aes(sample = bill_length_mm, color = species)) + 
+          geom_qq(show.legend=FALSE) + geom_qq_line(show.legend=FALSE) +
+          facet_wrap(~species) +
+          labs(title = "Normality of penguin bill lengths") + 
+          theme_classic()
+p2_qq
+
+
+# check within-group variance / distribution with density plot
+p2_dens <- df |> 
+            ggplot(aes(x = bill_length_mm, fill = species)) + 
+              geom_density(alpha = 0.5) +
+              labs(title = "Penguin bill length by species") + 
+              theme_classic()
+p2_dens
+
+# check within-group variance with descriptive statistics
+summary_stats2 <- df |> 
+                    group_by(species) |> 
+                    summarize(n = n(),
+                              median = median(bill_length_mm),
+                              mean = mean(bill_length_mm), 
+                              stdev = sd(bill_length_mm),
+                              variance = var(bill_length_mm)) 
+
+summary_stats2
+```
+
+>\textcolor{blue}{I am fairly certain these data are independently sampled, though I can not be sure because I did not collect the dataset. Theoretically, if the penguins were tagged and the same penguins tracked from year-to-year, then the measurements would not be independent. However, there is no `penguin ID` variable in the dataset, which would be necessary for tracking that type of data. So I feel comfortable with the assumption that these are independent samples.}
+>
+>
+>\textcolor{blue}{Based on the density plot and the descriptive statistics, the two groups have equal variance.}
+>
+>
+>\textcolor{blue}{Based on the QQ plot, these data are normally distributed.}
+>
+>
+>\textcolor{blue}{For these reasons, I will run a pooled t-test with $\alpha = 0.05$.}
+
+
+### E.	Run the test and interpret the results
+
+```{r}
+penguin_t <- t.test(bill_length_mm ~ species, data = df, var.equal = TRUE)
+penguin_t
+```
+
+>\textcolor{blue}{{Mean bill length is significantly lower in Adelie penguins than in Chinstrap penguins ($p = `r penguin_t[["p.value"]]`$, which is less than $\alpha = 0.05$)}}.
+
+### F.  Which descriptive statistics would you use to describe the results (mean/sd or median/IQR)?
+
+>\textcolor{blue}{Mean and standard deviation should be used to describe these results, because the t-test compares the means of two groups. Median and IQR describe distributions of data, so they aren't appropriate to combine with the results of the t-test.}
+
+```{r, warning=FALSE}
+
+# use ggpubr to make pretty plot 
+# display individual data points, group means & stdev, and the t-test result
+p2 <- df |> 
+  ggstripchart(
+  # assign aes() parameters
+      x = "species", y = "bill_length_mm", 
+      color = "species", size = 3,
+  # plot mean & stdev overlaid on stripchart of individual datapoints
+      add = "mean_sd",
+  # format plot visualization of mean & stdev
+      add.params = list(color = "black", width = 0.4), error.plot = "crossbar",
+  # set plot labels
+      title = "Difference in bill length between penguin species",
+      subtitle = "Penguin bill lengths, mean & SD",
+      xlab = "Penguin Species",
+      ylab = "Bill Length (mm)") +
+  # hide legend
+      rremove("legend") +
+  # annotate plot with pvalue from pooled, unpaired t-test
+      stat_compare_means(method = "t.test", 
+                         method.args = list(var.equal = TRUE, paired = FALSE),
+                         label.x.npc = "left")
+
+p2
+
+```

@@ -1,0 +1,200 @@
+---
+title: "8380 R Portfolio 1"
+author: "Caitlin Jagla"
+date: "3/25/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+# A) Load & Explore Data 
+
+This dataset describes measles vaccination rates across schools for the 2018-2019 school year.
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+# load data
+df <- read_csv("measles.csv")
+
+# load table describing variables (I made this csv based on the table in the pdf)
+desc <- read_csv("measles_desc.csv")
+```
+
+```{r}
+# view description of variables contained in the dataset
+desc
+```
+
+```{r}
+# preview dataset
+glimpse(df)
+```
+
+
+
+# B) Data Tidying
+
+1. Many rows appear to be repeat observations. The dataset has `r nrow(df)` observations, but only `r df |> distinct() |> nrow()` are distinct.
+2. Missing values are represented differently in different variables (`NA` OR `-1` OR `null`). They should be standardized across all columns.
+3. The majority of datapoints (`r (df |> filter(year=="2018-19") |> nrow())/nrow(df)`%) are from the 2018-2019 academic year, so I will focus on these and remove all the others to avoid repeated sampling from the same school. This also has the effect of tidying the `type` variable so that it only includes `public`, `private`, `charter`, or `NA`. 
+4. I am interested in vaccination rates, so I will remove any rows that are missing both the MMR and overall vaccination rate values.
+
+```{r}
+df <- df |> 
+  distinct() |> # remove non-distinct rows 
+  mutate(across(where(is.character), ~ na_if(.x, "null")), 
+         across(where(is.numeric), ~ na_if(.x, -1))) |> # standardize representation of missing values as `NA`
+        filter(year == "2018-19") |> # keep only 2018-2019 academic year
+        filter(!(is.na(mmr) & is.na(overall))) # remove datapoints that don't report either rate
+```
+
+
+
+# C) Generate an Aggregated Vaccination Rate
+
+
+**Many states report only one type of vaccination rate (either `mmr` or `overall`, not both). This makes it challenging to compare vaccination rates across the country, as essentially the `vaccination rate type` is confounded with the `state` variable. I wondered if it would be possible to integrate the two variables into a single aggregated vaccination rate. **
+
+This strategy relies on a few assumptions:
+
+1. In most US communities in 2018-2019, vaccination rates would have been roughly equivalent across all standard childhood vaccinations. Therefore, the MMR rate should generally reflect the overall vaccination rate, and vice versa. 
+2. Extreme differences between overall vaccination rate and MMR vaccination rate within the same school are likely related to vaccination schedules or other reporting issues. In order to gauge a school community's general vaccine uptake, in cases where both rates are reported and there is a very large difference, it seems reasonable to take whichever rate is higher. A potential issue with this assumption is that MMR vaccines specifically were falsely reported to be linked to autism, so hesitancy for these vaccines may not be representative of overall vaccine hesitancy. If this were the case, I would expect to see a pattern of MMR vaccination rates being lower than overall vaccination rates reported by the same schools. This question is investigated below, alongside additional validation of this aggregated rate variable approach.
+
+```{r}
+# generate an `aggregate vaccination rate` column
+
+
+# if/else mutate to aggregate the two vaccination rates into a single column 
+    # if mmr exists and overall does not, use mmr
+    # if overall exists and mmr does not, use overall
+    # if both exist, use whichever is higher
+    # if both exist and are equal, use overall
+df <- df |> mutate(vacc_rate = 
+                      case_when(
+                        !is.na(mmr) & is.na(overall) ~ mmr, 
+                        !is.na(overall) & is.na(mmr) ~ overall,
+                        !is.na(mmr) & !is.na(overall) & overall == mmr ~ overall,
+                        !is.na(mmr) & !is.na(overall) & overall > mmr ~ overall,
+                        !is.na(mmr) & !is.na(overall) & mmr > overall ~ mmr))
+```
+
+
+
+```{r}      
+# generate variables to investigate rate differences
+
+# if/else mutate to describe source of aggregate vacc_rate 
+df <- df |> mutate(rate_source = 
+                      case_when(
+                        !is.na(mmr) & is.na(overall) ~ "mmr", 
+                        !is.na(overall) & is.na(mmr) ~ "overall",
+                        !is.na(mmr) & !is.na(overall) ~ "both"))
+
+# if/else mutate to calculate differences between the two vaccination rates  
+    # if mmr exists and overall does not, use -9999 as placeholder
+    # if overall exists and mmr does not, use -9999 as placeholder
+    # if both exist, subtract mmr rate from overall rate
+df <- df |> mutate(diff = 
+                      case_when(
+                        !is.na(mmr) & is.na(overall) ~ -9999, 
+                        !is.na(overall) & is.na(mmr) ~ -9999,
+                        !is.na(mmr) & !is.na(overall) ~ overall - mmr))
+```
+
+
+## C2) Investigation of differences in MMR & overall vaccination rates reported by the same schools:
+* schools where only one rate was reported: `n` = `r df |> filter(diff == -9999) |> nrow()`
+* schools where both rates are reported & those rates are exactly equal: `n` = `r df |> filter(diff == 0) |> nrow()`
+* schools where both rates are reported & `overall` > `mmr`: `n` = `r df |> filter(diff > 0) |> nrow()`
+* schools where both rates are reported & `mmr` > `overall`: `n` = `r df |> filter(diff < 0) |> filter(diff > -9998) |> nrow()`
+
+
+* Fig C2a) MMR & overall vaccination rates reported by the same school generally differ by 10% or less
+* Fig C2b & C2c) MMR & overall vaccination rates reported by the same school are generally unaffected by school type or state
+* Fig C2d) Aggregate vaccination rate is generally unaffected by rate source
+
+
+```{r}
+# compare differences in mmr & overall vaccination rates reported by the same school
+
+
+# calculate mean & stdev for differences between the two rates reported by the same school
+df |> filter(diff != -9999) |> summarize(diff_mean = mean(diff),
+                                           diff_sd = sd(diff)) 
+
+
+df |> filter(diff != -9999) |> 
+  ggplot(aes(x = diff)) + 
+  geom_histogram(bins = 50) + xlim(-40,10) +
+  labs(subtitle = "Fig C2a. Difference between rates reported by the same school is ~10% or less",
+       x = "difference (overall - MMR)") +
+  theme_classic()
+
+df |> filter(diff != -9999) |> 
+  ggplot(aes(y = diff, x = type, fill = type)) + 
+  geom_boxplot(alpha = 0.5) +
+  labs(subtitle = "Fig C2b. Difference between rates reported by the same school by school type",
+       y = "difference (overall - MMR)") +
+  theme_classic()
+
+df |> filter(diff != -9999) |> 
+  ggplot(aes(y = diff, x = state, fill = state)) + 
+  geom_boxplot(alpha = 0.5) +
+ labs(subtitle = "Fig C2c. Difference between rates reported by the same school by state",
+       y = "difference (overall - MMR)") +
+  theme_classic()
+```
+
+```{r}
+
+# summarize by source for aggregated rate 
+df |> group_by(rate_source) |> summarize(vaccrate_mean = mean(vacc_rate),
+                                           vaccrate_sd = sd(vacc_rate))
+
+#visually verify that rate source for the aggregated `vacc_rate` variable does not confound
+df |> 
+  ggplot(aes(y = vacc_rate, x = rate_source, fill = rate_source)) + 
+  geom_boxplot(alpha = 0.5) +
+  labs(subtitle = "Fig C2d.  Aggregate vaccination rate is generally unaffected by rate source") +
+  theme_classic()
+
+
+```
+
+
+**Based on these results, I believe it is reasonable to aggregate the two different vaccination rate types into a single `vacc_rate` variable in order to facilitate across-state comparisons. This data wrangling will make it easier to analyze vaccination trends nationwide.**
+
+
+
+# D) Investigation of Vaccination Rates By State
+
+**Comparing vaccination rates across all the states in the tidied dataset, it is clear that there a few states with substantially lower vaccination levels among students than the nationwide mean of `r mean(df$vacc_rate)`. In contrast, 13 of 20 states remaining in the filtered dataset have median vaccination rates greater than or equal to 95%.**
+```{r}
+
+# summarize by state for aggregated rate 
+df |> 
+  group_by(state) |> 
+  summarize(vaccrate_med = median(vacc_rate),
+            vaccrate_mean = mean(vacc_rate),
+            vaccrate_sd = sd(vacc_rate)) |> 
+  arrange(vaccrate_med)
+
+# plot vaccination rate by state
+df |>
+  ggplot(aes(x = vacc_rate, y = reorder(state, vacc_rate, median), fill = state)) + 
+  geom_boxplot(alpha = 0.5, show.legend = FALSE) +
+  labs(title = "Fig D1) Aggregate vaccination rates by state") +
+  theme_classic() 
+
+
+```
+
+
+
+
+
+
+

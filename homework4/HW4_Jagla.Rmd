@@ -1,0 +1,273 @@
+---
+title: "Homework 4"
+author: "Caitlin Jagla"
+date: "03/25/2022"
+output: pdf_document
+---
+
+```{r, echo=FALSE, message=FALSE}
+library(tidyverse)
+```
+
+# 1. Estrogen
+
+A study of estrogen levels in two different groups of women finds the following results (in pg/mL):
+
+```{r, message=FALSE}
+
+est <- tibble(group = c(rep("A", 19), rep("B", 8)),
+              estrogen = c(18.7,  20.6,  20.7,  19.7,  19.9,  
+                           19.4,  20.2,  21.6,  18.8,  14.1,  
+                           21.6,  16.2,  21.7, 20.8,  19.3,  
+                           21.3,  19.9,  20.8,  23.2, 15.2,  
+                           36.2,  27.5,    4.7,  24.5,  29.4,  
+                           25.9,  62.8))
+```
+
+We want to know if there is a difference in the mean estrogen levels between the two groups. Use an $\alpha = 0.05$ for all of the hypothesis tests.
+
+### A. Use a Welch's t-test (unpooled variance) to test the difference between the groups. Interpret what you found.
+
+
+```{r}
+t.test(estrogen ~ group, data = est, var.equal = FALSE)
+```
+>The Welch's t-test with unpooled variance supports the null hypothesis (that there is no true difference in mean estrogen levels between the two groups), as `p > 0.05`.
+
+### B. Conduct a pooled test instead. Interpret what you have found.
+
+```{r}
+t.test(estrogen ~ group, data = est, var.equal = TRUE)
+```
+>The pooled t-test supports the alternative hypothesis, indicating that there is a true difference in mean estrogen levels between the two groups, since `p < 0.05`.
+
+### C. Create a plot to explore the differences between the groups.
+
+```{r}
+#compare within-group variance
+est |> 
+ggplot(aes(estrogen, fill = group)) + 
+  geom_density(alpha = 0.5) +
+  labs(title = "compare within-group variances") + 
+  theme_classic()
+
+#check outliers
+est |> 
+ggplot(aes(x = group, y = estrogen)) + 
+  geom_boxplot() +
+  geom_point() +
+  labs(title = "check outliers") + 
+  theme_classic()
+
+#check normality
+est |> 
+  ggplot(aes(sample = estrogen, color = group)) + 
+  geom_qq() + geom_qq_line() +
+  facet_wrap(~group) +
+  labs(title = "check normality") + 
+  theme_classic()
+```
+
+
+
+
+### D. Which type of test should be used for these data? Why? 
+
+> The Welch's (unpooled) t-test should be used for these data. The two groups do not have equivalent variances - group B has a much higher variance than group A. This can be seen in the "compare within-group variance" plot above. 
+
+### E. Explain why you got different answers to A and to B. Consider power of each test and hypothesis testing errors that could have occurred.
+
+> The answers were different because the variance of the two groups was so different that pooling them made a dramatic difference in the power of the t-test. In this case, using a pooled t-test when you should have used an unpooled t-test would result in a Type I error (false positive). This is evident when comparing the results of the two t-tests. The pooled t-test gives $p=$ `r t.test(estrogen ~ group, data = est, var.equal = TRUE)[["p.value"]]`, which is lower than $\alpha$ = 0.05, meaning the null hypothesis would be rejected. In contrast, the unpaired t-test gives $p=$ `r t.test(estrogen ~ group, data = est, var.equal = FALSE)[["p.value"]]`, which is higher than $\alpha$=0.05, meaning the null hypothesis would not be rejected.
+
+# 2. Beta-thromboglobulin and diabetes data cleaning
+
+### A. Load the btg.csv dataset into R using the `read_csv()` function from the tidyverse. These data are the excretion of $\beta$-thromboglobulin ($\beta$-TG) in the urine of diabetic and non-diabetic mice. Print the dataset by calling its name.
+
+```{r, message=FALSE}
+btg <- read_csv("btg.csv")
+btg
+```
+
+
+### B. Create a new column called `logbtg` that is the natural log of btg. Save the new column to the dataset and print the dataset to demonstrate the change.
+
+```{r}
+btg <- btg |> mutate(logbtg = log(btg))
+btg
+```
+
+
+### C.
+
+Create 2 plots:
+- show btg values for diabetic and non-diabetic mice
+- show logbtg values for diabetic and non-diabetic mice
+
+```{r}
+btg |> 
+ggplot(aes(x = reorder(status, btg), y = btg)) + 
+  geom_boxplot() +
+  labs(title = "\u03B2-TG excreted in the urine of diabetic and non-diabetic mice",
+       x = "status",
+       y = "\u03B2-TG") + 
+  theme_classic()
+
+btg |> 
+ggplot(aes(x = reorder(status, logbtg), y = logbtg)) + 
+  geom_boxplot() +
+  labs(title = "ln(\u03B2-TG) excreted in the urine of diabetic and non-diabetic mice",
+       x = "status",
+       y = "ln(\u03B2-TG)") + 
+  theme_classic()
+```
+
+
+### D. Calculate the mean and sd for diabetic and non-diabetic mice on the original btg scale and on the log scale. 
+
+
+```{r}
+btg |> group_by(status) |> summarize(btg_mean = mean(btg), btg_sd = sd(btg),
+                                       logbtg_mean = mean(logbtg), logbtg_sd = sd(logbtg)) 
+```
+
+
+### E. What is the effect of the log transformation on these data?
+
+> The log transformation decreases the nominal difference between groups and variance within each group. 
+
+
+
+# 3. Beta-thromboglobulin and diabetes t-test
+
+### A. Follow all steps of hypothesis testing (1. Declare hypotheses, 2. choose alpha, 3. check assumptions using exploratory plots, 4. calculate test statistic, 5. compare p to alpha and conclude) to conduct the most appropriate test of two means for btg explained by status 
+
+> note that if normality is not met, please indicate that, but then proceed with a t-test rather than the non-parametric alternative that we will learn next week
+
+* Declare hypotheses:
+  + $H_0: \mu_{normal} = \mu_{diabetes}$ 
+  + $H_1: \mu_{normal} \ne \mu_{diabetes}$ 
+     
+* Choose alpha:
+  + $\alpha = 0.05$
+    
+* Check assumptions using exploratory plots:
+  + normality: both groups are fairly normally distributed, though there is one outlier in the non-diabetic group
+  + independent samples: these data are collected from separate groups of mice, so the samples are independent 
+  + variance: the variance in the two groups is different enough that it seems safer to *not* rely on them being homogeneous 
+    
+```{r}
+# check normality with qq plot
+btg |> 
+  ggplot(aes(sample = btg, color = status)) + 
+  geom_qq() + geom_qq_line() +
+  facet_wrap(~status) +
+  labs(title = "3A) check \u03B2-TG normality (QQ plot)") + 
+  theme_classic()
+
+# check normality with boxplot
+btg |> 
+  ggplot(aes(x = reorder(status, btg), y = btg)) + 
+  geom_boxplot() +
+  labs(title = "3A) check \u03B2-TG normality (boxplot)",
+       x = "status",
+       y = "\u03B2-TG") + 
+  theme_classic()
+
+# check variance with density plot
+btg |> 
+  ggplot(aes(btg, fill = status)) + 
+  geom_density(alpha = 0.5) +
+  labs(title = "3C) check \u03B2-TG homogeneity of variance (density plot)",
+       x = "\u03B2-TG") + 
+  theme_classic()
+
+# check with descriptive statistics
+btg.stats <- btg |> group_by(status) |> summarize(btg_mean = mean(btg), 
+                                                    btg_sd = sd(btg),
+                                                    btg_var = var(btg),
+                                                    n = n()) 
+btg.stats
+```
+
+* Calculate test statistic:
+```{r}
+
+t.test(btg ~ status, data = btg, var.equal = FALSE)
+
+```
+
+* Compare $p$ to $\alpha$ and conclude:
+  + $p =$ `r t.test(btg ~ status, data = btg, var.equal = FALSE)[["p.value"]]`, which is less than $\alpha = 0.05$
+  + Therefore we reject the null hypothesis and conclude that there is a difference in $\beta$-TG excreted in the urine of diabetic vs. non-diabetic mice
+
+### B. Follow all steps of hypothesis testing (1. Declare hypotheses, 2. choose alpha, 3. check assumptions using exploratory plots, 4. calculate test statistic, 5. compare p to alpha and conclude) to conduct the most appropriate test of two means for logbtg explained by status
+
+> note that if normality is not met, please indicate that, but then proceed with a t-test rather than the non-parametric alternative that we will learn next week
+
+* Declare hypotheses:
+  + $H_0: \mu_{normal} = \mu_{diabetes}$ 
+  + $H_1: \mu_{normal} \ne \mu_{diabetes}$ 
+     
+* Choose alpha:
+  + $\alpha = 0.05$
+    
+* Check assumptions using exploratory plots:
+  + normality: both groups are fairly normally distributed, though there is one outlier in the non-diabetic group
+  + independent samples: these data are collected from separate groups of mice, so the samples are independent 
+  + variance: the two groups have equal variance
+    
+```{r}
+# check normality with qq plot
+btg |> 
+  ggplot(aes(sample = logbtg, color = status)) + 
+  geom_qq() + geom_qq_line() +
+  facet_wrap(~status) +
+  labs(title = "check ln(\u03B2-TG) normality (QQ plot)") + 
+  theme_classic()
+
+# check normality with boxplot
+btg |> 
+  ggplot(aes(x = reorder(status, logbtg), y = logbtg)) + 
+  geom_boxplot() +
+  labs(title = "check ln(\u03B2-TG) normality (boxplot)",
+       x = "status",
+       y = "ln(\u03B2-TG)") + 
+  theme_classic()
+
+# check variance with density plot
+btg |> 
+  ggplot(aes(logbtg, fill = status)) + 
+  geom_density(alpha = 0.5) +
+  labs(title = "check ln(\u03B2-TG) homogeneity of variance (density plot)",
+       x = "ln(\u03B2-TG)") + 
+  theme_classic()
+
+# check with descriptive statistics
+logbtg.stats <- btg |> group_by(status) |> summarize(logbtg_mean = mean(logbtg), 
+                                                    logbtg_sd = sd(logbtg),
+                                                    logbtg_var = var(logbtg),
+                                                    n = n()) 
+logbtg.stats
+```
+
+* Calculate test statistic:
+```{r}
+
+t.test(logbtg ~ status, data = btg, var.equal = TRUE)
+
+```
+
+* Compare $p$ to $\alpha$ and conclude:
+  + $p =$ `r t.test(logbtg ~ status, data = btg, var.equal = TRUE)[["p.value"]]`, which is less than $\alpha = 0.05$
+  + Therefore we reject the null hypothesis and conclude that there is a difference in $\beta$-TG excreted in the urine of diabetic vs. non-diabetic mice
+
+
+### C. Compare and contrast the results from A and B.
+
+
+> The results from both t-tests lead to the rejection of the null hypothesis ($p < \alpha$) with the conclusion that there is a true difference in $\beta$-TG excreted in the urine of diabetic vs. non-diabetic mice. Taking the natural log of measured $\beta$-TG values allows us to use a pooled t-test because the groups have equal variance after the transformation, which greatly increases the power of the test. 
+
+
+
+
+

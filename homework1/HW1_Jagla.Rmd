@@ -1,0 +1,291 @@
+---
+title: 'Homework 1: Descriptive Statistics and Intro to R'
+author: "Caitlin Jagla"
+date: "Monday Feb 28, 2022"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, results='hide'}
+library(tidyverse)
+```
+
+# Exercise 1 -- Mean v. Median
+
+Suppose we have the following measurements for the weights (in grams) of 10wk old male mice:
+
+```
+27.3  18.6  23.4  22.8  19.5  28.3
+```
+
+A. Create a vector called `mice` that contains these values. Call `mice` to print the vector
+
+```{r}
+mice <- c(27.3, 18.6, 23.4, 22.8, 19.5, 28.3)
+
+mice
+```
+
+B. Use the `summary()` function to see the 6 number summary of the `mice` vector
+
+```{r}
+summary(mice)
+```
+
+
+C. Suppose we had an additional male mouse who weighs 39.3 g. Add this observation to the `mice` vector and re-save it as `mice2`
+```{r}
+mice2 <- c(mice, 39.3)
+```
+
+
+
+D. Use the `summary()` function to see the 6 number summary of the `mice2` vector
+```{r}
+summary(mice2)
+```
+
+
+
+E. Use a graphing function to create a boxplot showing `mice`. Do the same for `mice2`.
+
+```{r}
+rbind(enframe(mice, value = "weight", name = "dataset") |> mutate(dataset = "mice"),
+      enframe(mice2, value = "weight", name = "dataset") |> mutate(dataset = "mice2")) |>
+  ggplot(aes(y=weight, x=dataset)) +
+  geom_boxplot() + 
+  labs(title = "Effect of outliers on median weight of 10wk old male mice",
+       y = "weight (g)") +
+  theme_classic()
+```
+
+
+
+F.	Which statistic (mean or median) do you think better represents this new sample of 7 mice? Why?
+
+```
+Median better represents the new sample of 7 mice, because the additional
+datapoint is an outlier which skews the mean more than it affects the median.
+```
+
+
+G. If we add 25 to each of the 7 observations, what will happen to the mean and what will happen to the standard deviation? Optionally, you may do it to see what happens. Why is this is the case?
+
+```{r}
+mice3 <- mice2 + 25
+```
+
+```{r}
+mean(mice2)
+sd(mice2)
+mean(mice3)
+sd(mice3)
+```
+
+```
+The mean will increase by 25, because you have shifted the entire dataset higher by 25. 
+The standard deviation will not change when you add 25 to every observation, 
+because it describes variation between the observations and the mean, 
+rather than the magnitude of the observations themselves. 
+```
+
+
+\pagebreak
+
+# Exercise 2 -- Measures of spread
+
+Nine men were measured for testosterone levels with the following values (in ng/dL): 
+
+```
+634   521   616   784   542   705   810    597    623
+```
+
+```{r}
+tlvl <- c(634, 521, 616, 784, 542, 705, 810, 597, 623)
+```
+
+
+A. Calculate the Sum of Squares (SS). *Note: there is no built in function for SS*. Look at the formula in the notes
+
+```{r}
+ss <- sum((tlvl - mean(tlvl))^2)        
+ss                                
+```
+
+
+B. Calculate the variance ($s^2$).
+
+```{r}
+var(tlvl)
+```
+
+C. Calculate the standard deviation (s).
+```{r}
+sd(tlvl)
+```
+
+
+D. Add an additional testosterone value of 950 to the original vector and save the result to a new object.
+
+```{r}
+tlvl2 <- c(tlvl, 950)
+```
+
+
+E. Calculate the standard deviation (s) of the new vector.
+```{r}
+sd(tlvl2)
+```
+
+
+F. What effect did adding the observation 950 ng/dL have on the standard deviation? Why? 
+
+```{r}
+# manually calculate original dataset upper fence 
+summary(tlvl)[5][[1]] + # extract 3rd quartile from summary() output for original dataset
+  IQR(tlvl)*1.5         
+
+range(tlvl) # get original range
+```
+
+```
+Standard deviation increased by a substantial amount (34.24095) because 
+950 ng/dL is well outside the previous range of observations (521 - 850)
+and even above the upper fence of the original dataset.
+```
+
+
+
+\pagebreak
+# Exercise 3 -- Descriptive Statistics in R
+
+For this problem we will load a dataset about GDP per capita and life expectancy in various countries.
+
+ A. Using `read_csv()`, load the `gapminder.csv` dataset. Try adding the `message=FALSE` option to this R chunk too. Then use **two functions** of your choice to investigate the dataset.
+```{r, message=FALSE}
+gm <- read_csv("gapminder.csv")
+
+glimpse(gm)
+summary(gm)
+```
+
+ B. What type of variable is `country`? What type of variable is `gdp_per_cap`? (Multiple functions can be used to tell you this)
+ 
+
+ 
+```{r}
+gm |> 
+  pull(country) |> # select column (variable) to be queried 
+  type_sum()        # check variable type 
+
+gm |>
+  pull(gdp_per_cap) |>
+  type_sum()
+
+str(gm$gdp_per_cap) # confirm that `gdp_per_cap` is a numeric vector by checking structure
+```
+```
+`country` is a character variable.
+`gdp_per_cap` is a double (numeric) variable.
+```
+
+ C. Calculate the median life expectancy (`lifeexp`) across the whole dataset
+ 
+```{r}
+gm |> pull(lifeexp) |> median()
+```
+
+ D. What is the range of gdp per capita  (`gdp_per_cap`) across the whole dataset?
+
+```{r}
+gm |> pull(gdp_per_cap) |> range()
+```
+
+ E. What is the mean and standard deviation for population?
+ 
+```{r}
+gm |>
+  summarize(mean = mean(population),
+            stdev = sd(population))
+``` 
+
+\pagebreak
+
+# Exercise 4 -- Practice with dplyr and ggplot
+
+ A. How many distinct countries (`country`) are there in each continent (`continent`)?
+
+```{r}
+gm |>
+  group_by(continent) |>
+  summarize(n_unique = length(unique(country)))
+```
+
+ B. Show the names of the 8 distinct countries in Africa.
+ 
+```{r}
+gm |> 
+  filter(continent == "Africa") |>
+  distinct(country)
+```
+ 
+
+ C. For each `continent` calculate the mean of `lifeexp`, the median `lifeexp`, and the standard deviation of `lifeexp`. Put the output in order by median `lifeexp`.
+ 
+```{r}
+gm |> 
+  group_by(continent) |>
+  summarize(mean = mean(lifeexp),
+            median = median(lifeexp),
+            stdev = sd(lifeexp)) |>
+  arrange(median)
+```
+
+
+ D. Which European nation had the lowest `gdp_per_capita`? Show only the `country` and `gdp_per_capita` columns. 
+ 
+```{r}
+gm |> 
+  filter(continent == "Europe") |> 
+  filter(gdp_per_cap == min(gdp_per_cap)) |>
+  select(country, gdp_per_cap)
+```
+ 
+
+ E. Create a scatter plot using `ggplot()` to look at the relationship between life expectancy and gdp per capita. Color each of the points by continent.
+ 
+```{r, message = FALSE}
+gm |> 
+  ggplot(aes(x = gdp_per_cap, y = lifeexp)) +
+  geom_point(aes(color = continent), size = 2.5) + 
+  geom_smooth(method = "lm", color = "black", se = FALSE) +
+  labs(title = "Relationship between GDP per capita & life expectancy by continent",
+       x = "GDP Per Capita",
+       y = "Life Expectancy (years)",
+       color = "Continent") +
+  scale_color_brewer(type = "qual", palette = "Set1") +
+  theme_classic()
+```
+
+ 
+ 
+ F. Create a boxplot using `ggplot()` that looks at the relationship between continent and population. Use `filter()` to remove Oceania from the graph.
+ 
+```{r}
+
+gm |> 
+  filter(continent != "Oceania") |>
+  ggplot(aes(x = continent, y = population, fill = continent)) +
+  geom_boxplot(show.legend = FALSE) +
+  labs(title = "Country Populations By Continent",
+       x = "Continent",
+       y = "Country Population") +
+  scale_fill_brewer(type = "qual", palette = "Set1") +
+  theme_classic()
+
+
+```
+
+ 
