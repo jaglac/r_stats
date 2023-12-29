@@ -1,8 +1,3 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
 # `r_stats` repository readme
 
 This repository contains homework and projects completed during my Statistics courses at UVA. A summary of each assignment is below:
